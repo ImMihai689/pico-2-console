@@ -23,7 +23,7 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico2 CACHE STRING "Board type")
+set(PICO_BOARD pico2_w CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
@@ -35,7 +35,12 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(source-code main.c )
+add_executable(source-code 
+    main.c 
+    hardware/hw_i2c.c
+    fatfs/ff.c
+    fatfs/sdd.c
+    )
 
 pico_set_program_name(source-code "source-code")
 pico_set_program_version(source-code "0.1")
@@ -57,6 +62,8 @@ target_link_libraries(source-code
 # Add the standard include files to the build
 target_include_directories(source-code PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/hardware
+        ${CMAKE_CURRENT_LIST_DIR}/fatfs
 )
 
 # Add any user requested libraries
@@ -65,6 +72,7 @@ target_link_libraries(source-code
         hardware_dma
         hardware_pio
         hardware_timer
+        hardware_i2c
         )
 
 pico_add_extra_outputs(source-code)
