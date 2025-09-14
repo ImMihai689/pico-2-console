@@ -38,6 +38,9 @@ pico_sdk_init()
 add_executable(source-code 
     main.c 
     hardware/hw_i2c.c
+    hardware/hw_thumb.c
+    hardware/hw_pwm.c
+    hardware/hw_lcd.c
     fatfs/ff.c
     fatfs/sdd.c
     )
@@ -73,6 +76,9 @@ target_link_libraries(source-code
         hardware_pio
         hardware_timer
         hardware_i2c
+        hardware_adc
+        hardware_pwm
+        hardware_clocks
         )
 
 pico_add_extra_outputs(source-code)

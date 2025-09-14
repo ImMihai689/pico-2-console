@@ -4,25 +4,21 @@
 #include "hw_defines.h"
 #include "hardware/gpio.h"
 
+#include "hw_pwm.h"
 #include "hw_i2c.h"
+#include "hw_thumb.h"
+#include "hw_lcd.h"
 
 // Initialize all hardware
 void hw_init()
 {
-    gpio_init(PICO_INFO_LED);
-    gpio_set_dir(PICO_INFO_LED, true);
-    gpio_set_drive_strength(PICO_INFO_LED, GPIO_DRIVE_STRENGTH_4MA);
-    gpio_put(PICO_INFO_LED, true); // Active LOW
+    hw_lcd_init();
 
-    gpio_init(BUZZER);
-    gpio_set_dir(BUZZER, true);
-    gpio_set_drive_strength(BUZZER, GPIO_DRIVE_STRENGTH_4MA);
-    gpio_put(BUZZER, true); // Active LOW
+    hw_pwm_init();
 
-    gpio_init(HAPTIC);
-    gpio_set_dir(HAPTIC, true);
-    gpio_set_drive_strength(HAPTIC, GPIO_DRIVE_STRENGTH_4MA);
-    gpio_put(HAPTIC, true); // Active LOW
+    hw_i2c_init();
+
+    hw_thumb_init();
 }
 
 #endif
