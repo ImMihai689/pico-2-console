@@ -38,6 +38,14 @@
     "raspberry-pi-pico.cmakePath": "${HOME}/.pico-sdk/cmake/v3.31.5/bin/cmake",
     "raspberry-pi-pico.ninjaPath": "${HOME}/.pico-sdk/ninja/v1.12.1/ninja",
     "files.associations": {
-        "timer.h": "c"
+        "timer.h": "c",
+        "hw_thumb.h": "c",
+        "stdint.h": "c",
+        "stdlib.h": "c",
+        "pico.h": "c",
+        "types.h": "c",
+        "cstdlib": "c",
+        "spi.h": "c",
+        "adc.h": "c"
     }
 }

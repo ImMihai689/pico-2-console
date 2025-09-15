@@ -4,33 +4,30 @@
 #include "hardware/dma.h"
 #include "hardware/pio.h"
 #include "hardware/timer.h"
+#include "pico/multicore.h"
 
 #include "ff.h"
 
-#include "hw_main.h"
+#include "hardware.h"
 
-const hw_pwm_note_t test_notes[] = {
-    {.freq = 262, .us = 50000},
-    {.freq = 294, .us = 50000},
-    {.freq = 330, .us = 50000},
-    {.freq = 349, .us = 50000},
-    {.freq = 392, .us = 50000},
-    {.freq = 440, .us = 50000},
-    {.freq = 494, .us = 50000},
-    {.freq = 523, .us = 50000},
-    {.freq = 0, .us = 0},
-};
 
 int main()
 {
     stdio_init_all();
 
-    hw_init();
+
+    multicore_launch_core1(hw_init);
+    uint32_t result;
+    if(!multicore_fifo_pop_timeout_us(5 * 1000 * 1000, &result))
+        info_led_set(100, 10 * 1000);
+    if(result != 'k')
+        info_led_set(100, 10 * 1000);
+        
 
     
 
     while (true) {
-        //hw_pwm_play_notes(test_notes);
-        sleep_ms(5000);
+        printf("Sw: %d,  X: %d,  Y: %d\n", thumb_read_sw(), thumb_read_x(), thumb_read_y());
+        sleep_ms(100);
     }
 }

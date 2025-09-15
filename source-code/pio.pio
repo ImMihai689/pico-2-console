@@ -1,0 +1,15 @@
+.program bl_pwm
+.side_set 1 opt
+
+.wrap_target
+    pull noblock    side 0
+    mov x, osr
+    set y, 31
+countloop:
+    jmp x!=y noset
+    jmp skip        side 1
+noset:
+    nop
+skip:
+    jmp y-- countloop
+.wrap
