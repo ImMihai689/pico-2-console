@@ -130,20 +130,10 @@ uint thumb_read_y(void);
 /// @return True if pressed, false if not
 bool thumb_read_sw(void);
 
-/// @brief Set the brighness of the LCD backlight
-/// @param intensity any value in [0, 32], where 0 is off, and 32 is full on
-void lcd_set_backlight(int intensity);
-
-/// @brief Set the writting rect of the LCD to the rectangle of upper left corner at (x0, y0) and lower right corner at (x1, y1).
-///        0 <= x0 <= x1 < 320 and 0 <= y0 <= y1 < 240. Coordinates will be flipped/truncated if they aren't corect.
-/// @param x0 upper left x coordinate
-/// @param y0 upper left y coordinate
-/// @param x1 lower right x coordinate
-/// @param y1 lower right y coordinate
-void lcd_set_write_rect(uint x0, uint y0, uint x1, uint y1);
-
-/// @brief Set the LCD's color mode (slow function, takes 10ms) (by default 565-bit colors)
-/// @param mode If false, 12-444-bit colors (4k colors). If true, 16-565-bit colors(65k colors)
-void lcd_set_color_mode(bool mode);
+/// @brief Write a command to LCD with optional arguments
+/// @param cmd The command
+/// @param args The array of arguments
+/// @param num_args The number of arguments
+void lcd_write_command(uint8_t cmd, const uint8_t *args, uint num_args);
 
 #endif

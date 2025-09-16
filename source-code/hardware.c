@@ -21,10 +21,7 @@ void wait_us(uint us)
         tight_loop_contents();
 }
 
-/// @brief Write a command to LCD with optional arguments
-/// @param cmd The command
-/// @param args The array of arguments
-/// @param num_args The number of arguments
+
 void lcd_write_command(uint8_t cmd, const uint8_t *args, uint num_args)
 {
     gpio_put(LCD_CS, false);
@@ -146,9 +143,7 @@ void hw_init()
     gpio_put(LCD_CS, true);
 
     gpio_put(LCD_BL, false);
-    gpio_set_function(LCD_BL, GPIO_FUNC_PIO0);
-
-    lcd_set_backlight(0);
+    gpio_set_function(LCD_BL, GPIO_FUNC_SIO);
 
     multicore_fifo_push_blocking('k');
 
@@ -206,13 +201,13 @@ void note_alarm_callback(uint alarm_num)
 
 void buzzer_play_note(const note_t *note)
 {
-    play_note_internal(note);
+    buzzer_play_note_private(note);
     next_note = NULL;
 }
 
 void buzzer_play_notes(const note_t *notes)
 {
-    play_note_internal(notes);
+    buzzer_play_note_private(notes);
     next_note = notes + 1;
 }
 
@@ -223,53 +218,7 @@ char buttons_read()
     return fin;
 }
 
-void lcd_set_backlight(int intensity)
-{
-    if(intensity < 1)
-    {
-        gpio_put(LCD_BL, false);
-        gpio_set_function(LCD_BL, GPIO_FUNC_SIO);
-        return;
-    }
-    if(intensity > 31)
-    {
-        gpio_put(LCD_BL, true);
-        gpio_set_function(LCD_BL, GPIO_FUNC_SIO);
-        return;
-    }
 
-    pio_sm_put_blocking(LCD_BL_PIO, LCD_BL_PIO_SM, intensity);
-    gpio_set_function(LCD_BL, GPIO_FUNC_PIO0);
-}
-
-void lcd_set_write_rect(uint x0, uint y0, uint x1, uint y1)
-{
-    if(x0 > x1)
-    {
-        x0 ^= x1;
-        x1 ^= x0;
-        x0 ^= x1;
-    }
-    if(y0 > y1)
-    {
-        y0 ^= y1;
-        y1 ^= y0;
-        y0 ^= y1;
-    }
-    if(x1 >= 320)
-        x1 = 319;
-    if(y1 >= 240)
-        y1 = 239;
-    
-    lcd_write_command(0x2A, (const uint8_t[]){x0 >> 8, x0 & 0xFF, x1 >> 8, x1 & 0xFF}, 4);   // Column address set
-    lcd_write_command(0x2B, (const uint8_t[]){0, y0, 0, y1}, 4);    // Row address set
-}
-
-void lcd_set_color_mode(bool mode)
-{
-    lcd_write_command(0x3A, (const uint8_t[]){0x55}, 1);    // Color mode - 16bit color, to boot
-    wait_us(10 * 1000);
-}
 
 uint thumb_read_x()
 {

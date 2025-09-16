@@ -40,6 +40,8 @@ add_executable(source-code
     fatfs/ff.c
     fatfs/sdd.c
     hardware.c
+    display/display.c
+    display/graphics.c
     )
 
 pico_set_program_name(source-code "source-code")
@@ -62,6 +64,7 @@ target_link_libraries(source-code
 # Add the standard include files to the build
 target_include_directories(source-code PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/display
         ${CMAKE_CURRENT_LIST_DIR}/build
         ${CMAKE_CURRENT_LIST_DIR}/hardware
         ${CMAKE_CURRENT_LIST_DIR}/fatfs

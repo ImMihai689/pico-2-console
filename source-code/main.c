@@ -9,6 +9,7 @@
 #include "ff.h"
 
 #include "hardware.h"
+#include "display.h"
 
 
 int main()
