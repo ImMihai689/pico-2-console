@@ -61,6 +61,7 @@
 #define BUZZER 22
 #define BUZZER_SLICE 3
 #define BUZZER_CHAN 0
+#define BUZZER_ALARM 0
 // The buzzer pin (ACTIVE LOW)(matters in idle, while using it it's PWM)
 // And what system alarm to use to play notes on the buzzer
 
@@ -74,7 +75,7 @@ typedef struct
 {
     uint freq;  // Frequency to play
     uint us;    // For how long to play the note
-} hw_pwm_note_t;
+} note_t;
 
 /// @brief Fast wait function (fast as in, pretty small) (so I don't have to include pico/time.h)
 /// @param us How many microseconds to wait
@@ -111,11 +112,11 @@ void info_led_set(uint val, uint ms);
 
 /// @brief Play a single note
 /// @param note Pointer to the note
-void buzzer_play_note(const hw_pwm_note_t *note);
+void buzzer_play_note(const note_t *note);
 
 /// @brief Play a series of notes
 /// @param notes The array of notes to play (last note is termination and has duration 0)
-void buzzer_play_notes(const hw_pwm_note_t *notes);
+void buzzer_play_notes(const note_t *notes);
 
 /// @brief Read the thumbstick X axis
 /// @return A number from 0 to 4095 (14 bit resolution), 0 - full left, 4095 - full right
