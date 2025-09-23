@@ -9,6 +9,7 @@
 #include "hardware/timer.h"
 #include "hardware/gpio.h"
 #include "hardware/spi.h"
+#include "hardware/dma.h"
 
 volatile DSTATUS sta = STA_NOINIT;
 
@@ -16,6 +17,9 @@ DSTATUS disk_status (BYTE pdrv)
 {
     if(pdrv != 0)
         return STA_NOINIT | STA_NODISK;
+    
+    if(gpio_get(SD_DET) == true)
+        sta = STA_NODISK | STA_NOINIT;
     return sta;
 }
 
@@ -148,6 +152,11 @@ void sdbd_spi_read_card_register(uint8_t data[16], bool cmd)
 DSTATUS disk_initialize(BYTE pdrv)
 {
     sta = STA_NOINIT;
+
+#ifdef SD_DET
+    gpio_init(SD_DET);
+    gpio_pull_up(SD_DET);
+#endif
     
     spi_init(SD_SPI, SD_INIT_BR);
 
@@ -162,6 +171,11 @@ DSTATUS disk_initialize(BYTE pdrv)
 
     gpio_set_pulls(SD_MISO, true, false);
     gpio_set_pulls(SD_MOSI, true, false);
+
+#ifdef SD_DET
+    if(gpio_get(SD_DET) == true)
+        return STA_NODISK | STA_NOINIT;
+#endif
 
     uint8_t init_response[5];
 
@@ -340,6 +354,11 @@ DRESULT disk_write(BYTE pdrv, const BYTE* buff, LBA_t sector, UINT count)
     
     if(sta != 0)
         return RES_NOTRDY;
+
+    gpio_put(SD_CS, false);
+    while(gpio_get(SD_MISO) == 0)
+        tight_loop_contents();
+    gpio_put(SD_CS, true);
 
     if(count > 1)
     {

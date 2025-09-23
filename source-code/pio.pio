@@ -1,10 +1,12 @@
 .program bl_pwm
 .side_set 1 opt
 
+    pull block
+    mov isr, osr
 .wrap_target
     pull noblock    side 0
     mov x, osr
-    set y, 31
+    mov y, isr
 countloop:
     jmp x!=y noset
     jmp skip        side 1
@@ -12,4 +14,19 @@ noset:
     nop
 skip:
     jmp y-- countloop
+.wrap
+
+
+.program lcd_rx
+.side_set 1
+.in 1 left auto 8
+
+reset:
+    pull block      side 0
+    mov x, osr      side 0
+.wrap_target
+    jmp x--, jump   side 0 
+    jmp reset       side 1
+jump:
+    in pins, 1      side 1
 .wrap

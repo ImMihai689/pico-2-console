@@ -57,6 +57,15 @@ pico_generate_pio_header(source-code ${CMAKE_CURRENT_LIST_DIR}/pio.pio)
 pico_enable_stdio_uart(source-code 0)
 pico_enable_stdio_usb(source-code 1)
 
+target_compile_definitions(source-code PRIVATE
+	PLL_SYS_REFDIV=1
+	PLL_SYS_VCO_FREQ_HZ=1200000000
+	PLL_SYS_POSTDIV1=3
+	PLL_SYS_POSTDIV2=2
+	SYS_CLK_HZ=200000000
+)
+
+
 # Add the standard library to the build
 target_link_libraries(source-code
         pico_stdlib)

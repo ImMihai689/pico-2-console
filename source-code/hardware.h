@@ -1,9 +1,28 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
+#include "display.h"
+
 // not really sure why this is needed, it worked before without it
 #include "pico/types.h"
 
+/* Only for reference, changing this doesn't actually change the
+ * frequency of the RP2350. 
+ * To change that,
+ * go in CMakeLists.txt in the root directory (the one with main.c)
+ * look for the "target_compile_definitions" with all the
+ * "PLL_SYS_[...]" definitons and after you found that,
+ * go to the RP2350 datasheet in chapter 8.6 PLL to see how
+ * changing these values affects the PLL and how you can use
+ * the vcocalc.py script to calculate what those values should
+ * be in order to get your desired frequency.
+ * After setting those, come back here and change this value
+ * to what you want your target frequency to be in order to
+ * realize that this value isn't actually used anywhere.
+ */
+#define DESIGN_SYS_FREQ_KHZ (200 * 1000)
+
+/* To change SD card pins (and the DMA channel, go to fatfs/sdconf.h)
 #define HW_SD_MISO 0
 #define HW_SD_MOSI 3
 #define HW_SD_SCLK 2
@@ -11,7 +30,12 @@
 #define HW_SD_DET 4
 // SD card interface pins
 // DET is DETect
+*/
 
+// DMA allocation:
+// DMA chan 0 is used by SD card interface
+// DMA chan 1 is used by LCD interface
+// DMA chan 2 is aldo used by LCD interface
 
 #define HW_I2C_INST &i2c0_inst
 
@@ -42,8 +66,9 @@
 #define LCD_RST 11
 #define LCD_FMARK 10
 #define LCD_BL 6
-#define LCD_BL_PIO pio0
-#define LCD_BL_PIO_SM 0
+#define LCD_PIO pio0
+#define LCD_BL_SM 0
+#define LCD_RX_SM 1
 // LCD interface pins
 // SCL - Serial CLock, SDI - Serial Data In
 // BL is backlight, it uses PIO PWM because the same channel and slice is also used by the buzzer
@@ -130,10 +155,5 @@ uint thumb_read_y(void);
 /// @return True if pressed, false if not
 bool thumb_read_sw(void);
 
-/// @brief Write a command to LCD with optional arguments
-/// @param cmd The command
-/// @param args The array of arguments
-/// @param num_args The number of arguments
-void lcd_write_command(uint8_t cmd, const uint8_t *args, uint num_args);
 
 #endif
