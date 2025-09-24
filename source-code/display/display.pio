@@ -1,0 +1,77 @@
+.program bl_pwm
+.side_set 1 opt
+
+.wrap_target
+    pull noblock    side 0
+    mov x, osr
+    mov y, isr
+countloop:
+    jmp x!=y noset
+    jmp skip        side 1
+noset:
+    nop
+skip:
+    jmp y-- countloop
+.wrap
+
+
+.program lcd_rx
+.side_set 1
+.in 1 left auto 8
+
+reset:
+    pull block      side 0
+    mov x, osr      side 0
+.wrap_target
+    jmp x--, jump   side 0 
+    jmp reset       side 1
+jump:
+    in pins, 1      side 1
+.wrap
+
+.program lcd_tx_double
+.side_set 1 opt
+.out 1 left 32
+
+; Thank you Pimoroni Picosystem
+; from their "screen_double.pio" file
+
+.wrap_target
+
+  pull                      ; fetch two pixels
+  out x, 16                 ; first pixel in x register
+  out y, 16                 ; second pixel in y register
+
+; write first pixel
+
+  mov osr, x                ; move pixel data back into osr from register x
+  out null, 16              ; discard the 16-bits of dummy data + 4-bits of alpha we don't need from the mov
+p1:
+  out pins, 1   side 0      ; output bit, clear clock
+  jmp !osre p1  side 1      ; if still bits in osr then jump back to start of loop and clock in data
+
+; duplicate first pixel
+
+  mov osr, x                ; move pixel data back into osr from register x
+  out null, 16              ; discard as above..
+p1d:
+  out pins, 1   side 0      ; output bit, clear clock
+  jmp !osre p1d  side 1     ; if still bits in osr then jump back to start of loop and clock in data
+
+; write second pixel
+
+  mov osr, y                ; move pixel data back into osr from register y
+  out null, 16              ; discard as above..
+p2:
+  out pins, 1   side 0      ; output bit, clear clock
+  jmp !osre p2  side 1      ; if still bits in osr then jump back to start of loop and clock in data
+
+; duplicate second pixel
+
+  mov osr, y                ; move pixel data back into osr from register y
+  out null, 16              ; discard as above..
+p2d:
+  out pins, 1   side 0      ; output bit, clear clock
+  jmp !osre p2d  side 1     ; if still bits in osr then jump back to start of loop and clock in data
+
+.wrap

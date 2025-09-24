@@ -17,9 +17,9 @@
 #define LCD_RAMWR 0x2C
 
 /// @brief To be called by core1 during hw_init()
-void lcd_init();
+void lcd_init(void);
 
-/// @brief Write a command to LCD with optional arguments (blocking)
+/// @brief Write a command to LCD with optional arguments using SPI (blocking)
 /// @param cmd The command
 /// @param args The array of arguments
 /// @param num_args The number of arguments
@@ -29,9 +29,17 @@ void lcd_write_command(uint8_t cmd, const uint8_t *args, uint num_args);
 /// @param intensity any value in [0, 32], where 0 is off, and 32 is full on
 void lcd_set_backlight(int intensity);
 
-/// @brief Set the LCD's color mode (slow function, takes 10ms) (by default 565-bit colors)
-/// @param mode If false, 12-444-bit colors (4k colors). If true, 16-565-bit colors(65k colors)
-void lcd_set_color_mode(bool mode);
+/// @brief Set the LCD's mode. (slow, 10ms)
+/// @param mode If true, normal resolution (240x320) with 12-bit color.
+///             If false, half resolution (120x160) with 16-bit color.
+void lcd_set_mode(bool mode);
+
+/// @brief Check if DMA is busy writting to the display
+/// @return True if busy
+inline bool lcd_is_writting();
+
+/// @brief Fill the screen with black, without a display buffer, using DMA
+void lcd_clear_screen(void);
 
 
 

@@ -33,7 +33,7 @@ int main()
     if(result != 'k')
         info_led_set(100, 10 * 1000);
     
-    lcd_set_backlight(32);
+    lcd_set_backlight(16);
 
     
     

@@ -8,7 +8,7 @@
 #include "hardware/pio.h"
 #include "hardware/clocks.h"
 #include "pico/multicore.h"
-#include "pio.pio.h"
+#include "display.pio.h"
 
 /// Raw read of lower 32 bits of default timer
 #define TIME_US PICO_DEFAULT_TIMER_INSTANCE()->timerawl

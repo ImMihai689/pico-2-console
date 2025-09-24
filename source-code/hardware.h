@@ -69,6 +69,7 @@
 #define LCD_PIO pio0
 #define LCD_BL_SM 0
 #define LCD_RX_SM 1
+#define LCD_TX_SM 2
 // LCD interface pins
 // SCL - Serial CLock, SDI - Serial Data In
 // BL is backlight, it uses PIO PWM because the same channel and slice is also used by the buzzer
