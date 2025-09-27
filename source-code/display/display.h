@@ -39,6 +39,7 @@ void lcd_set_mode(bool mode);
 inline bool lcd_is_writting();
 
 /// @brief Fill the screen with black, without a display buffer, using DMA
+/// @note Returns after *starting* transfer
 void lcd_clear_screen(void);
 
 

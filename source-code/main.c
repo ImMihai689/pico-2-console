@@ -22,9 +22,7 @@ int main()
     //set_sys_clock_khz(DESIGN_SYS_FREQ_KHZ, true);
     printf("clock: %d\n", frequency_count_khz(0x09));
 
-    printf("tilemap str size: %d\n", sizeof(tileset_t));
-
-    sizeof(tilemap_t);
+    
 
     multicore_launch_core1(hw_init);
     uint32_t result;

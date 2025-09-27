@@ -174,28 +174,6 @@ void lcd_set_backlight(int intensity)
     gpio_set_function(LCD_BL, GPIO_FUNC_PIO0);
 }
 
-void lcd_set_write_rect(uint x0, uint y0, uint x1, uint y1)
-{
-    if(x0 > x1)
-    {
-        x0 ^= x1;
-        x1 ^= x0;
-        x0 ^= x1;
-    }
-    if(y0 > y1)
-    {
-        y0 ^= y1;
-        y1 ^= y0;
-        y0 ^= y1;
-    }
-    if(x1 >= 320)
-        x1 = 319;
-    if(y1 >= 240)
-        y1 = 239;
-    
-    lcd_write_command(0x2A, (const uint8_t[]){x0 >> 8, x0 & 0xFF, x1 >> 8, x1 & 0xFF}, 4);   // Column address set
-    lcd_write_command(0x2B, (const uint8_t[]){0, y0, 0, y1}, 4);    // Row address set
-}
 
 void lcd_set_mode(bool mode)
 {
