@@ -41,7 +41,7 @@ add_executable(source-code
     fatfs/sdd.c
     hardware.c
     display/display.c
-    display/graphics.c
+    bmplib/bmplib.c
     )
 
 pico_set_program_name(source-code "source-code")
@@ -49,6 +49,8 @@ pico_set_program_version(source-code "0.1")
 
 # no_flash means the target is to run from RAM
 pico_set_binary_type(source-code no_flash)
+
+#pico_set_linker_script(source-code ${CMAKE_CURRENT_LIST_DIR}/console_link.ld)
 
 # Generate PIO header
 pico_generate_pio_header(source-code 
@@ -79,6 +81,7 @@ target_include_directories(source-code PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/build
         ${CMAKE_CURRENT_LIST_DIR}/hardware
         ${CMAKE_CURRENT_LIST_DIR}/fatfs
+        ${CMAKE_CURRENT_LIST_DIR}/bmplib
 )
 
 # Add any user requested libraries

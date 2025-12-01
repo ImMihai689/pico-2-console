@@ -23,8 +23,8 @@
 //#define NO_DMA
 // Do not use DMA for the SPI transfers. Comment to use DMA for SPI transfers.
 
-#define SD_INIT_BR 200000
+#define SD_INIT_BR (200 * 1000)
 // The buadrate used when initialising the SDHC card (recommended 100kHz - 400kHz)
 
-#define SD_RUNNING_BR 1000000
+#define SD_RUNNING_BR (25 * 1000 * 1000)
 // The baudrate used when using the SDHC card normally (can be way higher than SD_INIT_BR, but I don't know how much, 1000000 is an example)

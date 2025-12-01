@@ -1,18 +1,28 @@
 .program bl_pwm
 .side_set 1 opt
 
-.wrap_target
-    pull noblock    side 0
-    mov x, osr
-    mov y, isr
+    pull noblock    side 0 ; Pull from FIFO to OSR if available, else copy X to OSR.
+    mov x, osr             ; Copy most-recently-pulled value back to scratch X
+    mov y, isr             ; ISR contains PWM period. Y used as counter.
 countloop:
-    jmp x!=y noset
+    jmp x!=y noset         ; Set pin high if X == Y, keep the two paths length matched
     jmp skip        side 1
 noset:
-    nop
+    nop                    ; Single dummy cycle to keep the two paths the same length
 skip:
-    jmp y-- countloop
-.wrap
+    jmp y-- countloop      ; Loop until Y hits 0, then pull a fresh PWM value from FIFO
+
+% c-sdk {
+static inline void bl_pwm_program_init(PIO pio, uint sm, uint offset, uint pin) {
+   pio_gpio_init(pio, pin);
+   pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+   pio_sm_config c = bl_pwm_program_get_default_config(offset);
+   sm_config_set_clkdiv(&c, 200.0f);
+   sm_config_set_sideset_pins(&c, pin);
+   pio_sm_init(pio, sm, offset, &c);
+}
+%}
+
 
 
 .program lcd_rx
@@ -75,3 +85,4 @@ p2d:
   jmp !osre p2d  side 1     ; if still bits in osr then jump back to start of loop and clock in data
 
 .wrap
+

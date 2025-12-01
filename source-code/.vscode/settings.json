@@ -46,6 +46,11 @@
         "types.h": "c",
         "cstdlib": "c",
         "spi.h": "c",
-        "adc.h": "c"
+        "adc.h": "c",
+        "cstring": "c",
+        "variant": "c",
+        "stdio.h": "c",
+        "bmplib.h": "c",
+        "cstdint": "c"
     }
 }

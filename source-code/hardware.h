@@ -94,7 +94,7 @@
 #define THUMB_SW 5
 #define THUMB_X 27
 #define THUMB_Y 26
-// The thumbstick pins on the Pico, X and Y are anavoid log
+// The thumbstick pins on the Pico, X and Y are analog
 
 
 typedef struct

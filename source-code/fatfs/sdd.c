@@ -355,10 +355,6 @@ DRESULT disk_write(BYTE pdrv, const BYTE* buff, LBA_t sector, UINT count)
     if(sta != 0)
         return RES_NOTRDY;
 
-    gpio_put(SD_CS, false);
-    while(gpio_get(SD_MISO) == 0)
-        tight_loop_contents();
-    gpio_put(SD_CS, true);
 
     if(count > 1)
     {

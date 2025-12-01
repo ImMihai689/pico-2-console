@@ -78,7 +78,7 @@ void hw_init()
     pwm_set_chan_level(BUZZER_SLICE, BUZZER_CHAN, 11);
     pwm_set_enabled(BUZZER_SLICE, true);
 
-    /// THUMBSTICK -- will have to resolder connector
+    /// THUMBSTICK
 
     gpio_init(THUMB_SW);
     gpio_set_pulls(THUMB_SW, true, false);
@@ -106,12 +106,7 @@ void hw_init()
         true,
         gpio_irq_handler);
 
-    multicore_fifo_push_blocking('k');
-
-    while(true)
-    {
-        info_led_update_private();
-    }
+    
 }
 
 void info_led_set(uint val, uint ms)
